@@ -4,7 +4,7 @@
 * Salaj Rijal
      
 # A statement of the problem you are solving and/or a high level description of the project.
-I will be creating my own blockchain (hopefully cryptocurrency). I will be starting small and then working my way up from there. The MVP is a single process blockchain that feeds information to user interface in a seperate process. I will then add these features incrementally:
+I will be creating my own blockchain (hopefully cryptocurrency). I will be starting small and then working my way up from there. The MVP is a single process blockchain that feeds information to user interface in a seperate process. Other features that I plan to add after finishing the MVP:
 - Keep track of transactions in blockchain.
 - Create a peer-to-peer network where multiple processes maintain concesensus on blockchain
 
