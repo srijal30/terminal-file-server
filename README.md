@@ -49,10 +49,13 @@ Estimate: 01/08
 Estimate: 01/13
 * Phase 2: Implementing Cryptocurrency
     - Transaction pool
-    - Validate transaction
+    - Validate transaction (might or might not use RSA signing)
     - User interface add transaction
     - User interface query balance for user (which will have key)
 
 Estimate: 01/
 * Phase 3: Peer To Peer Network
-    - Send data
+    - Send history of blockchain to new clients
+    - Send new transactions to other clients
+    - Add blocks as other nodes send them
+    - 
