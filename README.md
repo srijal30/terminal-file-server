@@ -16,7 +16,7 @@ The user will interact with the blockchain through a user interface. For the MVP
 **Topics Covered**   
 The MVP will cover these topics:
 - Allocating memory
-    - Memory will have to be allocated
+    - Memory will have to be allocated to load blocks into memory
 - Working with files
     - The blockchain will be stored in a file
 - Processes
