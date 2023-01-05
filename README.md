@@ -9,7 +9,7 @@ I will be creating my own blockchain (hopefully cryptocurrency). I will be start
 - Allow multiple processes to connect to the blockchain
 
 # A description as to how the project will be used (describe the user interface).
-The user will interact with the blockchain through a user interface. For the MVP the user interface only displays data but for later phases the user will be allowed to send crypto or check balance. Additonally, I will use libraries ot 
+The user will interact with the blockchain through a user interface. For the MVP the user interface only displays data but for later phases the user will be allowed to request transactions or check balance.
 
 # A description of your technical design. This should include:
 
