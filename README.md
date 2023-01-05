@@ -5,8 +5,8 @@
      
 # A statement of the problem you are solving and/or a high level description of the project.
 I will be creating my own blockchain (hopefully cryptocurrency). I will be starting small and then working my way up from there. The MVP is a single process blockchain that feeds information to user interface in a seperate process. I will then add these features incrementally:
-- Add transactions to the blockchain
-- Allow multiple processes connect to the blockchain
+- Keep track of transactions in blockchain.
+- Allow multiple processes to connect to the blockchain
 
 # A description as to how the project will be used (describe the user interface).
 The user will interact with the blockchain through a user interface. For the MVP the user interface only displays data but for later phases the user will be allowed to send crypto or check balance. Additonally, I will use libraries ot 
