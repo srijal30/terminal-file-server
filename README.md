@@ -53,7 +53,7 @@ Estimate: 01/13
     - User interface add transaction
     - User interface query balance for user (which will have key)
 
-Estimate: 01/
+Estimate: 01/17
 * Phase 3: Peer To Peer Network
     - Send history of blockchain to new clients
     - Send new transactions to other clients
