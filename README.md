@@ -32,7 +32,7 @@ If I get to the additional phases, these topics will be covered as well:
 <br>I will be doing everything
   
 **What algorithms and /or data structures you will be using, and how.**
-- Sha256: to hash the blocks (will find library to do it online)
+- Sha256: to hash the blocks (will use OpenSSL (already download on marge I think))
 - Blockchain: to have public ledger of cryptocurrency
 - RSA: to make sure only person w/ private key can send transactions. (If this is too hard to implement I will omit) 
 
@@ -40,7 +40,7 @@ If I get to the additional phases, these topics will be covered as well:
 
 Estimate: 01/08
 * MVP: Simple Blockchain
-    - Hash block (will find hashing library)
+    - Hash block
     - Add block
     - Validate block
     - Validate blockchain
