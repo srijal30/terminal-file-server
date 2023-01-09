@@ -1,4 +1,6 @@
-DEVLOG
+# DEVLOG
 
-01/07/23
+## 01/09
+- created bases for all files
+- worked on server socket code
 
