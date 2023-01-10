@@ -22,6 +22,9 @@ int main(){
 	}
 
 
+	//cleanup
+	//add networking cleanup
+
 	return 0;
 }
 

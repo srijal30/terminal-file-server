@@ -15,9 +15,12 @@ int init_server(){
 	int sock = create_socket(NULL, 's');
 
 	//listen for clients forever (also give status to user ig about main server's progress)
-	
-	//fork for new client (is fork neccassary?)
+	while(1==1){
+		
+		//fork for new client (is fork neccassary?)
+	}
 
+	//only subserver makes it to here!
 	return -1;
 }
 
@@ -51,13 +54,6 @@ int create_socket(char* addr, char type){
 	freeaddrinfo(res);
 	return sock;
 }
-
-
-
-
-
-
-
 
 
 

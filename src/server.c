@@ -15,5 +15,8 @@ int main(){
 	printf("subserver %d is connected!\n", getpid());
 
 
+	//cleanup
+	//add networking cleanup
+
 	return 0;
 }
