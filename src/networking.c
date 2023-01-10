@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <unistd.h>
 
 #include <sys/socket.h>
 #include <sys/types.h>
@@ -8,19 +9,24 @@
 #include "helpers.h"
 
 #define PORT "58008"
+#define MAX_CLIENTS 10
 
 //returns the fd of client for subserver
 int init_server(){
 	//setup server info
 	int sock = create_socket(NULL, 's');
 
-	//listen for clients forever (also give status to user ig about main server's progress)
+	//start listening 
+	error_check(listen(sock, MAX_CLIENTS), "LISTEN SOCKET");
 	while(1==1){
-		
-		//fork for new client (is fork neccassary?)
+		//wait for client to connect
+		int client_sock = accept(sock, NULL, NULL); //do we care about other params
+		error_check(client_sock, "ACCEPT CLIENT");
+		//create server
+		if(fork() == 0) return client_sock;
 	}
 
-	//only subserver makes it to here!
+	//should never reach here
 	return -1;
 }
 
@@ -48,6 +54,9 @@ int create_socket(char* addr, char type){
 	//create the socket
 	int sock = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
 	error_check(sock, "CREATE SOCKET");
+
+	//bind if server	
+	if(type == 's') error_check(bind(sock, res->ai_addr, res->ai_addrlen), "BIND SERVER");
 
 	//cleanup
 	free(hints);
