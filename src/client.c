@@ -16,7 +16,7 @@ int main(){
 
 	//the application
 	while(1){
-		printf("this is the application!");
+		printf("this is the application!\n");
 		char buf[10];
 		fgets(buf, 10, stdin);
 	}

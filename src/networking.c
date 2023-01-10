@@ -2,6 +2,7 @@
 
 #include <sys/socket.h>
 #include <sys/types.h>
+#include <netdb.h>
 
 #include "networking.h"
 #include "helpers.h"
@@ -10,7 +11,7 @@
 int init_server(){
 	//setup server info
 
-	//listen for clients forever
+	//listen for clients forever (also give status to user ig about main server's progress)
 	
 	//fork for new client (is fork neccassary?)
 
@@ -19,8 +20,8 @@ int init_server(){
 
 //returns fd of the connected server
 int connect_server(char* ip, char* port){
+	//setup sockt info
 
 	return -1;
 }
-
 
