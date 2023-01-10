@@ -32,10 +32,7 @@ int init_server(){
 
 //returns fd of the connected server
 int connect_server(char* ip){
-	//setup client info
-	int sock = create_socket(ip, 'c');
-
-	return -1;
+	return create_socket(ip, 'c');
 }
 
 
@@ -57,6 +54,8 @@ int create_socket(char* addr, char type){
 
 	//bind if server	
 	if(type == 's') error_check(bind(sock, res->ai_addr, res->ai_addrlen), "BIND SERVER");
+	//connect if client
+	else if(type == 'c') error_check(connect(sock, res->ai_addr, res->ai_addrlen), "CONNECT CLIENT");
 
 	//cleanup
 	free(hints);
