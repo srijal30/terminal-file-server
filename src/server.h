@@ -1,6 +1,9 @@
 #ifndef SERVER_H
 #define SERVER_H
 
+//accept requestA
+void accept_request();
+
 //accept file from client
 
 //send file to client

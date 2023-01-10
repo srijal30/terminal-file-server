@@ -14,6 +14,10 @@ int main(){
 	//subserver that is the manager for file system
 	printf("subserver %d is connected!\n", getpid());
 
+	//wait for requests from client
+	while(1==1){
+	}
+
 
 	//cleanup
 	//add networking cleanup
