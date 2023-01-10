@@ -11,6 +11,7 @@ void error_check(int status, char* msg){
 		printf("%s: %s\n", msg, strerror(errno));
 		exit(1);
 	}
+	printf("%s: SUCCESS\n", msg);
 }
 
 char* get_input(char* msg){

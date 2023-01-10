@@ -3,6 +3,8 @@
 
 int init_server();
 
-int connect_server(char* ip, char* port);
+int connect_server(char* ip);
+
+int create_socket(char* addr, char type);
 
 #endif
