@@ -7,4 +7,5 @@
 ## 01/10
 - created helper method `create_socket`
 - started work on client connection and server connection
+- finished networking code
 
