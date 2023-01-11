@@ -16,15 +16,13 @@ int main(){
 
 	//the application
 	while(1){
-		printf("this is the application!\n");
-		char buf[10];
-		fgets(buf, 10, stdin);
+		int i; char c;
+		char* line = get_input("enter a char and int: ");
+		sscanf(line, "%c %d", &c, &i);
 	}
-
 
 	//cleanup
 	//add networking cleanup
-
 	return 0;
 }
 
