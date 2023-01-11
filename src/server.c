@@ -9,14 +9,12 @@
 #include <unistd.h>
 
 int main(){
-	//setup 
+	//server setup 
 	char buf[5];
 	int client = init_server();
 
-	//only subservers beyond this point!
-	//subserver that is the manager for file system
+	//APPLICATION
 	printf("subserver %d is connected to client %d!\n", getpid(), client);
-
 	//wait for requests from client
 	while(1==1){
 		char type; int bytes;
@@ -25,9 +23,7 @@ int main(){
 		printf("type is %c\nbytes are %d\n\n", type, bytes);
 	}
 
-
 	//cleanup
-	//add networking cleanup
-
+	cleanup(client);
 	return 0;
 }

@@ -10,3 +10,5 @@
 - finished networking code
 - added communication code for server and client
 
+## 01/11
+- started work on GUI

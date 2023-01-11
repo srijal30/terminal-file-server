@@ -12,16 +12,19 @@ int connect_server(char* ip);
 
 int create_socket(char* addr, char type);
 
+void cleanup(int sock);
+
+
 
 //COMMUNICATION STUFF
-/*
-	TYPES OF REQUESTS:
-	0 - EXIT
-	1 - UPLOAD FILE
-	2 - DOWNLOAD FILES
-	3 - DELETE FILE
-	4 - QUERY FILES
-*/
+enum TYPE{
+	EXIT,
+	UPLOAD,
+	DOWNLOAD,
+	DELETE,
+	QUERY
+};
+
 typedef struct request{
 	int type;
 	int bytesNext; //-1 no followup msg

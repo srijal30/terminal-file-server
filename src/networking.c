@@ -11,18 +11,18 @@
 
 //returns the fd of client for subserver
 int init_server(){
-	//setup server info
+	//create socket and start listening
 	int sock = create_socket(NULL, 's');
-	//start listening 
 	error_check(listen(sock, MAX_CLIENTS), "LISTEN SOCKET");
+
+	//keep on accepting clients
 	while(1==1){
-		//wait for client to connect
 		int client_sock = accept(sock, NULL, NULL); //do we care about other params
 		error_check(client_sock, "ACCEPT CLIENT");
-		//create server
+		//create subserver to deal with client
 		if(fork() == 0) return client_sock;
 	}
-	//should never reach here
+
 	return -1;
 }
 
@@ -31,10 +31,14 @@ int connect_server(char* ip){
 	return create_socket(ip, 'c');
 }
 
+void cleanup(int sock){
+	error_check(close(sock), "CLOSING CONNECTION");
+}
+
 //creates a socket for server or client
 int create_socket(char* addr, char type){
-	struct addrinfo *hints, *res;
 	//create the hints
+	struct addrinfo *hints, *res;
 	hints = (struct addrinfo*)calloc(1,sizeof(struct addrinfo));
 	hints->ai_family = AF_INET; //IPv4
 	hints->ai_socktype = SOCK_STREAM; //TCP
@@ -44,10 +48,11 @@ int create_socket(char* addr, char type){
 	//create the socket
 	int sock = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
 	error_check(sock, "CREATE SOCKET");
-	//bind if server	
+
+	//connect or bind
 	if(type == 's') error_check(bind(sock, res->ai_addr, res->ai_addrlen), "BIND SERVER");
-	//connect if client
 	else if(type == 'c') error_check(connect(sock, res->ai_addr, res->ai_addrlen), "CONNECT CLIENT");
+
 	//cleanup
 	free(hints);
 	freeaddrinfo(res);
@@ -75,11 +80,9 @@ RESPONSE* receive_response(int server){
 
 //send request to the server
 void send_request(int server, int type, int bytesNext){
-	//create the response
 	REQUEST* req = (REQUEST*)malloc(sizeof(REQUEST));
 	req->type = type;
 	req->bytesNext = bytesNext;
-	//send it off
 	error_check(write(server, req, sizeof(REQUEST)), "SENDING REQUEST");
 	free(req);
 }
