@@ -13,7 +13,6 @@ MVP features include:
 - Browse files
 - Update files
 
-<br>
 Extra features that I might add are:
 - Organization (directories, categories, etc.)
 - Authentication & Permissions
