@@ -14,7 +14,7 @@ int file_size(char* file_name);
 
 char* file_content(char *file_name);
 
-int create_file(char* file_name, char* file_content);
+void create_file(char* file_name, char* file_content);
 
 void delete_file(char* file_name);
 

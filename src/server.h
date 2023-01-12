@@ -1,18 +1,15 @@
 #ifndef SERVER_H
 #define SERVER_H
 
+#include "networking.h"
+
 //accept file from client
-void accept_file(int client);
+void accept_file(int client, REQUEST* req);
 
 //send file to client
-void send_file(int client);
+void send_file(int client, REQUEST* req);
 
 //delete file from subserver
-void delete_file(int client);
-
-//make sure that only one subserver is editing (deleting and updating?) files at a time (semaphore!)
-void get_pass();
-
-void return_pass();
+void remove_file(int client, REQUEST* req);
 
 #endif

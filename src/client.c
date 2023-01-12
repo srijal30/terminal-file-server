@@ -1,9 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <string.h>
 #include <unistd.h>
-
-#include <fcntl.h>
 #include <sys/stat.h>
 
 #include "file.h"
@@ -52,27 +51,25 @@ void client_exit(int server){
 
 void client_upload(int server){
 	//get valid filename
-	int fd; char* file;
-	file = get_input("\nenter address of the file: ");
-	while((fd = open(file, O_RDONLY) == -1))
-		file = get_input("INVALID TRY AGAIN!\nenter address of the file: ");
-	//get the info
-	struct stat st; stat(file, &st);
-	char* file_upload = (char*)malloc(st.st_size);
-	read(fd, file_upload, st.st_size);
-	//send it to server
-	printf("sent requestni\n");
-	send_request(server, UPLOAD, st.st_size);
-	printf("about to write\n");
-	write(server, file_upload, st.st_size);
+	char* file_name = get_input("file to upload: ");
+	while(!file_exists(file_name))
+		file_name = get_input("FILE DOES NOT EXIST!\nfile to upload: ");
+	//get the content
+	char* content = file_content(file_name);
+
+	//send message to server
+	//name of file
+	send_request(server, UPLOAD, strlen(file_name));
+	error_check(write(server, file_name, strlen(file_name)), "SENDING FILE");
+	//content of file
+	send_request(server, UPLOAD, file_size(file_name));
+	error_check(write(server, content, file_size(file_name)), "SENDING FILE");
+
 	//get the response
 	RESPONSE* res = receive_response(server);
-	printf("MESSAGE: %s\n", res->message);
-	//cleanup
-	close(fd);
-	free(res);
-	free(file_upload);
-	free(file);
+	printf("RESPONSE:\nSTATUS: %d\nBYTES_NEXT: %d\nMESSAGE: %s\n", res->status, res->bytesNext, res->message);
+	free(file_name);
+	free(content);
 }
 
 void client_download(int server){

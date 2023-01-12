@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <unistd.h>
-#include <string.h>
+#include <string.h> 
 
 #include <sys/socket.h>
 #include <sys/types.h>
@@ -82,7 +82,6 @@ RESPONSE* receive_response(int server){
 
 //send request to the server
 void send_request(int server, int type, int bytesNext){
-	printf("%d\n%d\n%d\n", server, type, bytesNext);
 	REQUEST* req = (REQUEST*)malloc(sizeof(REQUEST));
 	req->type = type;
 	req->bytesNext = bytesNext;
