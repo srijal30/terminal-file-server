@@ -16,9 +16,6 @@ int main(){
 	char* ip = get_input("enter IP of server: ");
 	int server = connect_server(ip); free(ip);
 	
-
-	printf("content: %s\n", file_content("README.md"));	
-	exit(0);
 	//the application
 	while(1){
 		//get user input
