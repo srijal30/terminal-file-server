@@ -1,12 +1,12 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 
-void client_upload();
+void client_upload(int server);
 
-void client_query();
+void client_query(int server);
 
-void client_delete();
+void client_delete(int server);
 
-void client_download();
+void client_download(int server);
 
 #endif

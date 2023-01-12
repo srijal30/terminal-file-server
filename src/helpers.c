@@ -4,6 +4,8 @@
 #include <errno.h>
 #include <string.h>
 
+#include <signal.h>
+
 #define MAXLINE 100
 
 void error_check(int status, char* msg){

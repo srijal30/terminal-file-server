@@ -78,8 +78,11 @@ RESPONSE* receive_response(int server){
 	return res;
 }
 
+#include <stdio.h>
+
 //send request to the server
 void send_request(int server, int type, int bytesNext){
+	printf("%d\n%d\n%d\n", server, type, bytesNext);
 	REQUEST* req = (REQUEST*)malloc(sizeof(REQUEST));
 	req->type = type;
 	req->bytesNext = bytesNext;

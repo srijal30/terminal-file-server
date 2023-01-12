@@ -17,10 +17,24 @@ int main(){
 	printf("subserver %d is connected to client %d!\n", getpid(), client);
 	//wait for requests from client
 	while(1==1){
-		char type; int bytes;
-		read(client, buf, 5);
-		sscanf(buf, "%c%d", &type, &bytes);
-		printf("type is %c\nbytes are %d\n\n", type, bytes);
+		REQUEST* req = receive_request(client);
+
+		switch(req->type){
+			case UPLOAD:
+				printf("UPLOADING...\n");
+				char* file = (char*)malloc(req->bytesNext);
+				read(client, file, req->bytesNext);
+				printf("CONTENT:\n%s\n", file);
+				send_response(client, 1, -1, "IT WORKED THANKS!\n");
+				free(file);
+				break;
+			case DOWNLOAD:
+				printf("DOWLOADING...\n");
+				break;
+			
+		}
+
+		free(req);
 	}
 
 	//cleanup
