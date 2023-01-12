@@ -18,8 +18,10 @@ int main(){
 	//wait for requests from client
 	while(1==1){
 		REQUEST* req = receive_request(client);
-
 		switch(req->type){
+			case EXIT:
+				cleanup(client);
+				exit(0);
 			case UPLOAD:
 				printf("UPLOADING...\n");
 				char* file = (char*)malloc(req->bytesNext);
@@ -33,7 +35,6 @@ int main(){
 				break;
 			
 		}
-
 		free(req);
 	}
 

@@ -1,15 +1,15 @@
 # COMPILING SEPERATE PROGRAMS
 compile: server.out client.out
 
-server.out: $(addprefix src/, server.o networking.o helpers.o)
-	gcc -Wall -Wextra -g -o server.out $(addprefix src/, server.o helpers.o networking.o)
+server.out: $(addprefix src/, server.o networking.o helpers.o file.o)
+	gcc -Wall -Wextra -g -o server.out $(addprefix src/, server.o helpers.o networking.o file.o)
 
-client.out: $(addprefix src/, client.o networking.o helpers.o)
-	gcc -Wall -Wextra -g -o client.out $(addprefix src/, client.o helpers.o networking.o)
+client.out: $(addprefix src/, client.o networking.o helpers.o file.o)
+	gcc -Wall -Wextra -g -o client.out $(addprefix src/, client.o helpers.o networking.o file.o)
 
 
 # COMPILING ALL BASE FILES
-client.o: $(addprefix src/, client.c client.h helpers.h networking.h)
+client.o: $(addprefix src/, client.c client.h helpers.h networking.h file.h)
 	gcc -c $(addprefix src/, client.c)
 
 helpers.o: $(addprefix src/, helpers.c)
@@ -18,9 +18,11 @@ helpers.o: $(addprefix src/, helpers.c)
 networking.o: $(addprefix src/, networking.c networking.h helpers.h)
 	gcc -c $(addprefix src/, networking.c)
 
-server.o: $(addprefix src/, server.c helpers.h networking.h)
+server.o: $(addprefix src/, server.c helpers.h networking.h file.h)
 	gcc -c $(addprefix src/, server.c)
 
+file.o: $(addprefix src/, file.c helpers.h file.h)
+	gcc -c $(addprefix src/, file.c)
 
 # FOR RUNNING
 server: server.out

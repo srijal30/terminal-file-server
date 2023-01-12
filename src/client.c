@@ -1,21 +1,24 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <fcntl.h>
 #include <unistd.h>
+
+#include <fcntl.h>
 #include <sys/stat.h>
 
+#include "file.h"
 #include "client.h"
 #include "helpers.h"
 #include "networking.h"
 
-int server = -1;
-
 int main(){
 	//connect to server
 	char* ip = get_input("enter IP of server: ");
-	server = connect_server(ip); free(ip);
+	int server = connect_server(ip); free(ip);
+	
 
+	printf("content: %s\n", file_content("README.md"));	
+	exit(0);
 	//the application
 	while(1){
 		//get user input
@@ -25,7 +28,7 @@ int main(){
 		//determine case
 		switch(type){
 			case EXIT:
-				printf("EXITING...\n"); cleanup(server); return 0; 
+				client_exit(server); break;
 			case UPLOAD:
 				client_upload(server); break;
 			case DOWNLOAD:
@@ -41,6 +44,13 @@ int main(){
 	//cleanup
 	cleanup(server);
 	return 0;
+}
+
+void client_exit(int server){
+	send_request(server, EXIT, -1);
+	cleanup(server);
+	printf("EXITING...\n");
+	exit(0);
 }
 
 void client_upload(int server){

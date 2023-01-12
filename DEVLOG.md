@@ -12,3 +12,9 @@
 
 ## 01/11
 - started work on GUI
+- worked on client methods (and their server counterparts)
+	- `exit`
+	- `upload`
+
+## 01/12
+- worked on file methods
