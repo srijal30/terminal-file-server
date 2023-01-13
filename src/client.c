@@ -23,10 +23,11 @@ int main(){
 	//CONTENT and QUERY... QUERY IS FOR OBJECTS, CONTENT IS FOR DISPLAY DATA
 
 	//GUI setup
-	FILEITEM** curDir; //should we store content too? (we can just have string)
+	enum mode {GLOBAL, LOCAL};
+	int curMode = LOCAL;
+	FILEITEM** curDir;
 	int selectedIndex; 
 	char* curPath;
-	enum mode {GLOBAL, LOCAL};
 	int height, width;
 
 	//start ncurses
@@ -35,13 +36,7 @@ int main(){
 	curs_set(0);
 	getmaxyx(stdscr, height, width);
 
-	//creating main menu
-	WINDOW* title = newwin(height/5, width*3/5, height/10, width/5);
-	box(title, 0, 0);
-	mvwprintw(title, 1, 1, "FILE ++");
-
-	//get ip and server
-	
+	//scrollable list menu
 
 		
 	wgetch(title);
