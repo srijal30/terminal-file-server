@@ -73,7 +73,14 @@ void client_upload(int server){
 }
 
 void client_download(int server){
-	
+	//get name of file to download
+
+	//send name of file to download
+
+	//receive response
+
+	//receive file
+
 }
 
 void client_query(int server){
@@ -81,6 +88,11 @@ void client_query(int server){
 }
 
 void client_delete(int server){
+	//get name of file to delete
+	
+	//send to server
+
+	//get response
 	
 }
 
