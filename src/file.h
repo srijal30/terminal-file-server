@@ -1,6 +1,12 @@
 #ifndef FILE_H
 #define FILE_H
 
+typedef struct file {
+	char name[50];	
+	struct stat st;
+} ITEM;
+
+
 void gain_access();
 
 void return_access();

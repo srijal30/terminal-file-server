@@ -19,10 +19,15 @@ int main(){
 	int server = connect_server(ip); free(ip);
 
 
+	//I THINK WE NEED 2 THINGS
+	//CONTENT and QUERY... QUERY IS FOR OBJECTS, CONTENT IS FOR DISPLAY DATA
+
 	//GUI setup
+	FILEITEM** curDir; //should we store content too? (we can just have string)
+	int selectedIndex; 
+	char* curPath;
 	enum mode {GLOBAL, LOCAL};
 	int height, width;
-	
 
 	//start ncurses
 	initscr();

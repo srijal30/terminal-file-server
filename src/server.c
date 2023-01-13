@@ -45,13 +45,13 @@ void accept_file(int client, REQUEST* req){
 }
 
 void send_file(int client, REQUEST* req){
-	char* content;
-	char* file_name = get_next(client, req->bytesNext);
+	char* content, file_name;
+	file_name = get_next(client, req->bytesNext);
 	//file might not exist
 	if(!file_exists(file_name)) send_response(client, 1, -1, "File doesn't exist!");
 	else{
 		content = file_content(file_name);
-		send_response(client, 1, file_size(file_name), "Preparing to send the file");
+		send_response(client, 1, file_size(file_name), "Preparing to send the file...");
 		write(client, content, file_size(file_name));
 	}
 	free(content);
