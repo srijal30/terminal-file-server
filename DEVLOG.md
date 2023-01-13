@@ -27,4 +27,3 @@
 - finished interactions (besides QUERY)
 	- DELETE
 	- DOWNLOAD
-- started work on GUI
