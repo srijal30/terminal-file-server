@@ -12,7 +12,7 @@
 #include "helpers.h"
 
 int init_server(){
-	int sock = create_socket(NULL, 's');
+	int sock = create_socket("0.0.0.0", 's');
 	error_check(listen(sock, MAX_CLIENTS), "LISTEN SOCKET");
 	while(1==1){
 		//DO WE NEED TO KEEP TRACK OF CLIENTS??
@@ -20,7 +20,7 @@ int init_server(){
 		error_check(client_sock, "ACCEPT CLIENT");
 		int forkVal = fork();
 		if(forkVal == 0) return client_sock;
-		else printf("SERVER %d CONNECTED TO CLIENT %d\n\n", forkVal, client_sock);
+		else printf("\nSERVER %d CONNECTED TO CLIENT %d\n", forkVal, client_sock);
 	}
 	return -1;
 }
