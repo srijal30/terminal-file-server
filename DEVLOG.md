@@ -2,19 +2,29 @@
 
 ## 01/09
 - created skeletons for server and client
-- created helpers and started networking code for both client and server
+- created helper methods `error_check` and `get_input`
+- started networking code for both client and server
 
 ## 01/10
-- created helper method `create_socket`
-- started work on client connection and server connection
+- server now creates subservers for every client
+- finished method `create_socket`
+- added REQUEST and RESPONSE structs
 - finished networking code
-- added communication code for server and client
 
 ## 01/11
-- started work on GUI
-- worked on client methods (and their server counterparts)
-	- `exit`
-	- `upload`
+- modified networkin code to make more modulatedS
+- created new file for file management methods:
+	- `file_content`
+	- `create_file`	
+	- `delete_file`
+	- `file_size`
+	- `file_exists`
+- worked on these interactions
+	- EXIT
+	- UPLOAD
 
 ## 01/12
-- worked on file methods
+- finished interactions (besides QUERY)
+	- DELETE
+	- DOWNLOAD
+- started work on GUI
