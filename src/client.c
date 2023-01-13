@@ -5,22 +5,46 @@
 #include <unistd.h>
 #include <sys/stat.h>
 
+#include <ncurses.h>
+
 #include "file.h"
 #include "client.h"
 #include "helpers.h"
 #include "networking.h"
 
+
 int main(){
+	enum mode {GLOBAL, LOCAL};
+	char** files;
+
+	//init
+	initscr();
+	noecho();
+	curs_set(0);
+
+	int height, width;
+	getmaxyx(stdscr, height, width);
+
+	//creating main menu
+	WINDOW* title = newwin(height/5, width*3/5, height/10, width/5);
+	box(title, 0, 0);
+	mvwprintw(title, 1, 1, "FILE ++");
+
+	//get ip and server
+	
+
+		
+	wgetch(title);
+	endwin();
+	exit(0);
+	
 	//connect to server
 	char* ip = get_input("enter IP of server: ");
 	int server = connect_server(ip); free(ip);
-	
-	//the application
+
 	while(1){
 		//get user input
-		printf("\nCHOOSE ONE:\n\t0: EXIT\n\t1: UPLOAD\n\t2: DOWNLOAD\n\t3: DELETE\n\t4: QUERY\n");
-		char* input = get_input("choose one: ");
-		int type; sscanf(input, "%d", &type); free(input);
+		int type = 0;
 		//determine case
 		switch(type){
 			case EXIT:
@@ -34,9 +58,14 @@ int main(){
 			case QUERY:
 				client_query(server); break;
 			default:
-				printf("SOMETHING WENT WRONG!\n"); exit(1); break;
+				//CHANGE
+				printf("SOMETHING WENT WRONG!\n"); 
+				exit(1); 
+				break;
 		}
 	}
+
+
 	//cleanup
 	cleanup(server);
 	return 0;

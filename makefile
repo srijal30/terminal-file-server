@@ -5,7 +5,7 @@ server.out: $(addprefix src/, server.o networking.o helpers.o file.o)
 	gcc -Wall -Wextra -g -o server.out $(addprefix src/, server.o helpers.o networking.o file.o)
 
 client.out: $(addprefix src/, client.o networking.o helpers.o file.o)
-	gcc -Wall -Wextra -g -o client.out $(addprefix src/, client.o helpers.o networking.o file.o)
+	gcc -Wall -Wextra -g -o client.out $(addprefix src/, client.o helpers.o networking.o file.o) -lncurses
 
 
 # COMPILING ALL BASE FILES
