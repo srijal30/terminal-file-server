@@ -14,15 +14,20 @@
 
 
 int main(){
-	enum mode {GLOBAL, LOCAL};
-	char** files;
+	//connect to server
+	char* ip = get_input("enter IP of server: ");
+	int server = connect_server(ip); free(ip);
 
-	//init
+
+	//GUI setup
+	enum mode {GLOBAL, LOCAL};
+	int height, width;
+	
+
+	//start ncurses
 	initscr();
 	noecho();
 	curs_set(0);
-
-	int height, width;
 	getmaxyx(stdscr, height, width);
 
 	//creating main menu
@@ -38,10 +43,6 @@ int main(){
 	endwin();
 	exit(0);
 	
-	//connect to server
-	char* ip = get_input("enter IP of server: ");
-	int server = connect_server(ip); free(ip);
-
 	while(1){
 		//get user input
 		int type = 0;

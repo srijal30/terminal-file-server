@@ -11,7 +11,7 @@
 
 #include "helpers.h"
 
-//ADD ERROR CHECKING
+//ERROR CHECKING SHOULDNT END PROGRAM RIGHT??
 
 //void gain_access();
 
@@ -31,10 +31,10 @@ int file_size(char* file_name){
 
 char* file_content(char *file_name){
 	int fd = open(file_name, O_RDONLY);
-	error_check(fd, "FILE CONTENT");
+	error_check(fd, "FILE CONTENT Invalid File");
 	int size = file_size(file_name);
 	char* content = (char*)malloc(size);
-	error_check(read(fd, content, size), "FILE CONTENT");
+	error_check(read(fd, content, size), "FILE CONTENT Read");
 	close(fd);
 	return content;
 }

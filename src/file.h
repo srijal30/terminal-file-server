@@ -1,12 +1,10 @@
 #ifndef FILE_H
 #define FILE_H
 
-//RESOURCE MANAGMENT
 void gain_access();
 
 void return_access();
 
-//MANIPULATION METHODS
 //0 for no 1 for yes
 int file_exists(char* file_name);
 
