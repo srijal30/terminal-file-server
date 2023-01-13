@@ -45,7 +45,7 @@ void accept_file(int client, REQUEST* req){
 }
 
 void send_file(int client, REQUEST* req){
-	char* content, file_name;
+	char *content, *file_name;
 	file_name = get_next(client, req->bytesNext);
 	//file might not exist
 	if(!file_exists(file_name)) send_response(client, 1, -1, "File doesn't exist!");

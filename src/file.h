@@ -1,10 +1,14 @@
 #ifndef FILE_H
 #define FILE_H
 
+#include <sys/stat.h>
+
 typedef struct file {
-	char name[50];	
-	struct stat st;
-} ITEM;
+	char name[50];
+	int size;
+	int type; //d+type
+	char* content; //dont know how imma do this, maybe iterate by sending count and then looping and accepting
+} FILEITEM;
 
 
 void gain_access();
