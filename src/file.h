@@ -3,13 +3,16 @@
 
 #include <sys/stat.h>
 
-typedef struct file {
-	char name[50];
+typedef struct fileitem {
+	char name[256];
 	int size;
-	int type; //d+type
-	char* content; //dont know how imma do this, maybe iterate by sending count and then looping and accepting
+	int type; //d_type
+	//char* content; //stores the content of item
 } FILEITEM;
 
+FILEITEM** get_items(char* path);
+
+void free_items(FILEITEM** items);
 
 void gain_access();
 

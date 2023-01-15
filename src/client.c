@@ -18,56 +18,71 @@ int main(){
 	char* ip = get_input("enter IP of server: ");
 	int server = connect_server(ip); free(ip);
 
-
-	//I THINK WE NEED 2 THINGS
-	//CONTENT and QUERY... QUERY IS FOR OBJECTS, CONTENT IS FOR DISPLAY DATA
-
-	//GUI setup
+	//var info setup
+	int height, width;
 	enum mode {GLOBAL, LOCAL};
 	int curMode = LOCAL;
-	FILEITEM** curDir;
-	int selectedIndex; 
-	char* curPath;
-	int height, width;
+	FILEITEM** items = get_items(".");
+	int selected = 0;
+	char cwd[256]; getcwd(cwd, 256);
+	printf("%s\n", cwd);
 
-	//start ncurses
+	//setup ncurses
 	initscr();
 	noecho();
 	curs_set(0);
+	keypad(stdscr, 1);
+
+	//window setup
 	getmaxyx(stdscr, height, width);
+	WINDOW* leftMenu = newwin(height-12, (width-2)*2/5, 10, 1);
+	WINDOW* rightMenu = newwin(height-12, (width-2)*3/5, 10, (width-2)*2/5+2);
 
-	//scrollable list menu
-
-		
-	wgetch(title);
-	endwin();
-	exit(0);
-	
+	//gui loop
 	while(1){
-		//get user input
-		int type = 0;
-		//determine case
-		switch(type){
-			case EXIT:
-				client_exit(server); break;
-			case UPLOAD:
-				client_upload(server); break;
-			case DOWNLOAD:
-				client_download(server); break;
-			case DELETE:
-				client_delete(server); break;
-			case QUERY:
-				client_query(server); break;
-			default:
-				//CHANGE
-				printf("SOMETHING WENT WRONG!\n"); 
-				exit(1); 
-				break;
+		//get the new height and width
+		//getmaxyx(stdscr, height, width);
+
+		//leftMenu
+		for(int i = 0; items[i] != NULL; i++){
+			if(i == selected) attron(A_BOLD);
+			mvwprintw(leftMenu, i+1, 1, "%s\n", items[i]->name);
+			attroff(A_BOLD);
+		}
+
+		box(leftMenu, 0, 0);
+		//rightMenu
+
+		//display gui
+		refresh();
+		wrefresh(leftMenu);
+		wrefresh(rightMenu);
+
+		//get input
+		int input = getch();
+		switch(input){
+			//cycle up
+			case KEY_UP: case 'k':
+				if(selected> 0) selected--;	
+			break;
+			//cycle down	
+			case KEY_DOWN: case 'j':
+				if(items[selected+1]!=NULL) selected++;
+			break;
+			//get options (this one finna be hard)
+			case KEY_ENTER:
+			break;
+			//switch to server
+			case 'g': case 'G':
+			break;
+			//refresh (idk if i need)
+			case 'r': case 'R':
+			break;
 		}
 	}
 
-
-	//cleanup
+	//end ncurses		
+	endwin();
 	cleanup(server);
 	return 0;
 }
@@ -79,50 +94,38 @@ void client_exit(int server){
 	exit(0);
 }
 
-void client_upload(int server){
-	//get valid filename
-	char* file_name = get_input("file to upload: ");
-	while(!file_exists(file_name))
-		file_name = get_input("FILE DOES NOT EXIST!\nfile to upload: ");
-	//get the content
-	char* content = file_content(file_name);
-
-	//send message to server
-	//name of file
-	send_request(server, UPLOAD, strlen(file_name));
-	error_check(write(server, file_name, strlen(file_name)), "SENDING FILE");
-	//content of file
-	send_request(server, UPLOAD, file_size(file_name));
-	error_check(write(server, content, file_size(file_name)), "SENDING FILE");
-
-	//get the response
+void client_upload(int server, char* filename){
+	//get content
+	char* content = file_content(filename);
+	//send name of file
+	send_request(server, UPLOAD, strlen(filename));
+	error_check(write(server, filename, strlen(filename)), "UPLOAD FILE send name");
+	//send content of file
+	send_request(server, UPLOAD, file_size(filename));
+	error_check(write(server, content, file_size(filename)), "SENDING FILE send content");
+	//receive response
 	RESPONSE* res = receive_response(server);
-	printf("RESPONSE:\nSTATUS: %d\nBYTES_NEXT: %d\nMESSAGE: %s\n", res->status, res->bytesNext, res->message);
-	free(file_name);
 	free(content);
 }
 
-void client_download(int server){
-	//get name of file to download
-
+//NEED TO ADD DESTINATION PATH
+void client_download(int server, char* filename){
 	//send name of file to download
-
+	send_request(server, DOWNLOAD, strlen(filename));
+	error_check(write(server, filename, strlen(filename)), "DOWNLOAD FILE send name");
 	//receive response
-
+	RESPONSE* res = receive_response(server);
 	//receive file
-
-}
-
-void client_query(int server){
+	
 	
 }
 
-void client_delete(int server){
+void client_query(int server, char* path){
+}
+
+void client_delete(int server, char* filename){
 	//get name of file to delete
-	
 	//send to server
-
 	//get response
-	
 }
 

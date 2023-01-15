@@ -27,3 +27,12 @@
 - finished interactions (besides QUERY)
 	- DELETE
 	- DOWNLOAD
+
+## 01/13
+- planned GUI design on paper
+- started work on GUI
+
+## 01/14
+- added function that creates list of all items in directory and well as some info
+- base GUI is semi complete
+- GUI loop created

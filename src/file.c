@@ -10,6 +10,7 @@
 #include <sys/types.h>
 
 #include "helpers.h"
+#include "file.h"
 
 //ERROR CHECKING SHOULDNT END PROGRAM RIGHT??
 
@@ -48,5 +49,46 @@ void create_file(char* file_name, char* file_content){
 
 void delete_file(char* file_name){
 	error_check(remove(file_name), "REMOVE FILE");
+}
+
+//DOES NOT WORK FOR DIFFERENT DIRECTORIES (we can use chdir)
+//CREATE FILEITEM STRUCT
+FILEITEM* get_item(struct dirent* entry){
+	FILEITEM* newItem = (FILEITEM*)malloc(sizeof(FILEITEM));
+	//get the size
+	struct stat st;
+	error_check(stat(entry->d_name, &st), "GETTING ITEM'S stat");
+	newItem->size = st.st_size;
+	//get the name & type
+	newItem->type = entry->d_type;
+	strncpy(newItem->name, entry->d_name, 256);
+	return newItem;
+}
+
+//GETS LIST OF FILE ITEMS IN PATH
+FILEITEM** get_items(char* path){
+	FILEITEM** items = (FILEITEM**)malloc(sizeof(FILEITEM*));
+	items[0] = NULL;
+	int cnt = 0;
+	//go through all the items in the dir path
+	DIR* dir = opendir(path);
+	struct dirent* entry = readdir(dir);
+	while(entry != NULL){
+		//dont add .
+		if(strcmp(entry->d_name, ".") != 0){
+			items[cnt] = get_item(entry);
+			items = (FILEITEM**)realloc(items, 8*(++cnt+1));
+			items[cnt] = NULL;
+		}
+		entry = readdir(dir);
+	}
+	return items;
+}
+
+//FREES FILEITEM LIST
+void free_items(FILEITEM** items){
+	int cnt = 0;
+	while(items[cnt] != NULL) free(items[cnt++]);
+	free(items);
 }
 
