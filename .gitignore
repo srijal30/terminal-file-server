@@ -1,6 +1,7 @@
 .vscode
 *.out
 *.o
+storage/
 test/
 
 # Prerequisites
