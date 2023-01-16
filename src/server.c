@@ -7,6 +7,7 @@
 #include "file.h"
 
 int main(){
+	debug(1);
 	int client = init_server();
 	while(1==1){
 		REQUEST* req = receive_request(client);
@@ -69,7 +70,16 @@ void remove_file(int client, REQUEST* req){
 	free(file_name);
 }
 
+//HOW TO SEND NULL?
 void query(int client, REQUEST* req){
-	//stub
+	char* path = get_next(client, req->bytesNext);
+	FILEITEM** items = get_items(path);	free(path);
+	//get amount of items (excluding NULL)
+	int cnt = 0;
+	for( ; items[cnt] != NULL; cnt++){}
+	send_response(client, 1, cnt, "Queried the items!");
+	//send the items to client
+	for(int i = 0; i < cnt; i++) error_check(write(client, items[i], sizeof(FILEITEM)), "QUERY sending item");
+	free_items(items);
 }
 

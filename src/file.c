@@ -81,13 +81,15 @@ FILEITEM** get_items(char* path){
 		}
 		entry = readdir(dir);
 	}
+	closedir(dir);
 	return items;
 }
 
 //FREES FILEITEM LIST
 void free_items(FILEITEM** items){
 	int cnt = 0;
-	while(items[cnt] != NULL) free(items[cnt++]);
+	do{free(items[cnt++]);}
+	while(items[cnt] != NULL);
 	free(items);
 }
 

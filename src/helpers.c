@@ -5,12 +5,18 @@
 
 #define MAXLINE 100
 
+int DEBUG = 0;
+
+void debug(int mode){
+	DEBUG = mode;
+}
+
 void error_check(int status, char* msg){
 	if(status == -1){
 		printf("%s: %s\n", msg, strerror(errno));
 		exit(1);
 	}
-	//printf("%s: SUCCESS\n", msg);
+	if(DEBUG) printf("%s: SUCCESS\n", msg);
 }
 
 char* get_input(char* msg){

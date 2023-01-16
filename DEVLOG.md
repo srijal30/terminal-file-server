@@ -36,3 +36,10 @@
 - added function that creates list of all items in directory and well as some info
 - base GUI is semi complete
 - GUI loop created
+
+## 01/15
+- added menu for GUI
+- added keyboard input for GUI
+
+## 01/16
+- added DEBUG

@@ -5,7 +5,7 @@ void client_exit(int server);
 
 void client_upload(int server, char* filename);
 
-void client_query(int server, char* path);
+FILEITEM** client_query(int server, char* path);
 
 void client_delete(int server, char* filename);
 
