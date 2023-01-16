@@ -35,19 +35,21 @@ int main(){
 
 	//window setup
 	getmaxyx(stdscr, height, width);
-	WINDOW* leftMenu = newwin(height-12, (width-2)*2/5, 10, 1);
-	WINDOW* rightMenu = newwin(height-12, (width-2)*3/5, 10, (width-2)*2/5+2);
+	WINDOW* leftMenu = newwin(height-8, (width-2)*2/5, 6, 1);
+	WINDOW* rightMenu = newwin(height-8, (width-2)*3/5, 6, (width-2)*2/5+2);
 
 	//gui loop
 	while(1){
 		//get the new height and width
 		//getmaxyx(stdscr, height, width);
 
+		wprintw(rightMenu, "NORMAL TEST\n");
+		attron(A_REVERSE);
+		wprintw(rightMenu, "REVERSE TEST\n");
+		attroff(A_REVERSE);
 		//leftMenu
 		for(int i = 0; items[i] != NULL; i++){
-			if(i == selected) attron(A_BOLD);
 			mvwprintw(leftMenu, i+1, 1, "%s\n", items[i]->name);
-			attroff(A_BOLD);
 		}
 
 		box(leftMenu, 0, 0);
