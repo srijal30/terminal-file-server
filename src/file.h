@@ -1,12 +1,10 @@
 #ifndef FILE_H
 #define FILE_H
 
-#include <sys/stat.h>
-
 typedef struct fileitem {
 	char name[256];
 	int size;
-	int type; //d_type
+	int type;
 	//char* content; //stores the content of item
 } FILEITEM;
 
@@ -18,7 +16,7 @@ void gain_access();
 
 void return_access();
 
-//0 for no 1 for yes
+//returns TRUE(1) or FALSE(0)
 int file_exists(char* file_name);
 
 int file_size(char* file_name);

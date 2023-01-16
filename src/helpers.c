@@ -1,10 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
-
 #include <errno.h>
 #include <string.h>
-
-#include <signal.h>
 
 #define MAXLINE 100
 
@@ -13,7 +10,7 @@ void error_check(int status, char* msg){
 		printf("%s: %s\n", msg, strerror(errno));
 		exit(1);
 	}
-	printf("%s: SUCCESS\n", msg);
+	//printf("%s: SUCCESS\n", msg);
 }
 
 char* get_input(char* msg){

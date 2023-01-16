@@ -1,11 +1,9 @@
-#include <stdlib.h>
 #include <stdio.h>
-
+#include <stdlib.h>
 #include <unistd.h>
 #include <string.h> 
 
 #include <sys/socket.h>
-#include <sys/types.h>
 #include <netdb.h>
 
 #include "networking.h"
@@ -74,8 +72,6 @@ RESPONSE* receive_response(int server){
 	return res;
 }
 
-#include <stdio.h>
-
 //send request to the server
 void send_request(int server, int type, int bytesNext){
 	REQUEST* req = (REQUEST*)malloc(sizeof(REQUEST));
@@ -92,6 +88,7 @@ REQUEST* receive_request(int client){
 	return req;
 }
 
+//gets follow up msg based on bytes
 char* get_next(int sock, int bytes){
 	char* str = (char*)malloc(bytes);
 	error_check(read(sock, str, bytes), "GETTING NEXT");

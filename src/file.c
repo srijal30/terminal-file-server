@@ -7,7 +7,6 @@
 #include <dirent.h>
 
 #include <sys/stat.h>
-#include <sys/types.h>
 
 #include "helpers.h"
 #include "file.h"
