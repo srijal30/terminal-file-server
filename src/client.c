@@ -29,9 +29,14 @@ int main(){
 
 	//setup ncurses
 	initscr();
+	init_pair(1, COLOR_BLACK, COLOR_BLUE);
 	noecho();
 	curs_set(0);
 	keypad(stdscr, 1);
+
+	if(!has_colors()){
+		exit(1);
+	}
 
 	//window setup
 	getmaxyx(stdscr, height, width);
@@ -40,20 +45,23 @@ int main(){
 
 	//gui loop
 	while(1){
-		//get the new height and width
-		//getmaxyx(stdscr, height, width);
+		//get the new height and width & resize
+		getmaxyx(stdscr, height, width);
 
-		wprintw(rightMenu, "NORMAL TEST\n");
-		attron(A_REVERSE);
-		wprintw(rightMenu, "REVERSE TEST\n");
-		attroff(A_REVERSE);
 		//leftMenu
 		for(int i = 0; items[i] != NULL; i++){
+			if(selected == i) wattron(leftMenu, A_REVERSE);
+			if(items[i]->type = 4) wattron(leftMenu, COLOR_PAIR(C_DIR));
 			mvwprintw(leftMenu, i+1, 1, "%s\n", items[i]->name);
+			if(selected == i) wattroff(leftMenu, A_REVERSE);
+			if(items[i]->type = 4) wattroff(leftMenu, COLOR_PAIR(C_DIR));
 		}
-
 		box(leftMenu, 0, 0);
+
 		//rightMenu
+		wattron(rightMenu, COLOR_PAIR(1));
+		wprintw(rightMenu, "COLOR TEST\n");
+		wattroff(rightMenu, COLOR_PAIR(1));
 
 		//display gui
 		refresh();
@@ -79,6 +87,9 @@ int main(){
 			break;
 			//refresh (idk if i need)
 			case 'r': case 'R':
+			break;
+			//quit
+			case 'q': case 'Q':
 			break;
 		}
 	}
@@ -130,4 +141,3 @@ void client_delete(int server, char* filename){
 	//send to server
 	//get response
 }
-
