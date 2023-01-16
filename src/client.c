@@ -65,11 +65,25 @@ int main(){
 
 		//topMenu
 		werase(topMenu);
+		char* msg = "FILEBOX++"; 
+		char* msg2 = "© Salaj Rijal";
+		mvwprintw(topMenu, 1, 1, msg);
+		mvwprintw(topMenu, 1, width-3-strlen(msg2), msg2);
+		//instructions
+		//local
+		if(mode == LOCAL) wattron(topMenu, A_REVERSE);
+		mvwprintw(topMenu, 3, 1, "(L) LOCAL");
+		if(mode == LOCAL) wattroff(topMenu, A_REVERSE);
+		//global
+		if(mode == GLOBAL) wattron(topMenu, A_REVERSE);
+		mvwprintw(topMenu, 3, 12, "(S) SERVER");
+		if(mode == GLOBAL) wattroff(topMenu, A_REVERSE);
+		mvwprintw(topMenu, 3, 24, "(ENTER) OPTIONS  (R) REFRESH  (Q) QUIT");
 		box(topMenu, 0, 0);
 		
 		//botMenu
 		werase(botMenu);
-		mvwprintw(botMenu, 0, 0, "%s PATH: %s\n", mode == LOCAL ? "LOCAL" : "REMOTE", cwd);
+		mvwprintw(botMenu, 0, 0, "LOCAL PATH: %s\n", cwd);
 
 		//display gui
 		refresh();
@@ -112,7 +126,7 @@ int main(){
 				}
 			break;
 			//switch to server files
-			case 'g': case 'G':
+			case 's': case 'S':
 				if(mode == LOCAL){
 					mode = GLOBAL;
 					selected = 0;

@@ -29,7 +29,9 @@ utils.o: $(addprefix src/, utils.c helpers.h networking.h file.h)
 
 # FOR RUNNING
 server: server.out
-	./server.out
+	mkdir storage
+	cd storage
+	../server.out
 
 client: client.out
 	./client.out
