@@ -1,13 +1,17 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#include <signal.h>
+
 #include "helpers.h"
 #include "networking.h"
 #include "server.h"
 #include "file.h"
 
 int main(){
+	signal(SIGINT, handler);
 	debug(1);
+	create_semaphore(1, 0666);
 	int client = init_server();
 	while(1==1){
 		REQUEST* req = receive_request(client);
@@ -36,6 +40,7 @@ int main(){
 
 //GET ACCESS
 void accept_file(int client, REQUEST* req){
+	gain_access();
 	char* file_name = get_next(client, req->bytesNext);
 	req = receive_request(client); //get info for content
 	char* content = get_next(client, req->bytesNext);
@@ -43,6 +48,7 @@ void accept_file(int client, REQUEST* req){
 	send_response(client, 1, -1, "File successfully uploaded!");
 	free(file_name);
 	free(content);
+	return_access();
 }
 
 void send_file(int client, REQUEST* req){
@@ -61,6 +67,7 @@ void send_file(int client, REQUEST* req){
 
 //GET ACCESS
 void remove_file(int client, REQUEST* req){
+	gain_access();
 	char* file_name = get_next(client, req->bytesNext);
 	if(file_exists(file_name)){
 		delete_file(file_name);
@@ -68,6 +75,7 @@ void remove_file(int client, REQUEST* req){
 	}
 	else send_response(client, 0, -1, "File doesn't exist!");
 	free(file_name);
+	return_access();
 }
 
 //HOW TO SEND NULL?
@@ -83,3 +91,9 @@ void query(int client, REQUEST* req){
 	free_items(items);
 }
 
+static void handler(int sig){
+	if(sig == SIGINT){
+		remove_semaphore();
+		exit(0);
+	}
+}

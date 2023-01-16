@@ -12,6 +12,12 @@ FILEITEM** get_items(char* path);
 
 void free_items(FILEITEM** items);
 
+int create_semaphore(int val, int perms);
+
+void remove_semaphore();
+
+int get_semaphore();
+
 void gain_access();
 
 void return_access();

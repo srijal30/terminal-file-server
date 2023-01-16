@@ -43,3 +43,7 @@
 
 ## 01/16
 - added DEBUG
+- added topMenu window
+- added bottomMenu window
+- integreated features wtih GUI
+- added semaphore for file writing access

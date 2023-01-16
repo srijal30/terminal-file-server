@@ -4,18 +4,67 @@
 
 #include <unistd.h>
 #include <fcntl.h>
-#include <dirent.h>
 
+#include <dirent.h>
 #include <sys/stat.h>
+
+#include <sys/sem.h>
+#include <sys/ipc.h>
 
 #include "helpers.h"
 #include "file.h"
 
-//ERROR CHECKING SHOULDNT END PROGRAM RIGHT??
 
-//void gain_access();
+//TAKEN FROM LAB 14 AND MODIFIED
+int KEY = 100792036;
 
-//void return_access();
+union semun {
+  int val;
+  struct semid_ds *buf;
+  unsigned short  *array;
+  struct seminfo  *__buf;
+};
+
+int create_semaphore(int val, int perms){
+	//create the semaphore (always override)
+	int semid = semget(KEY, 1, IPC_CREAT | perms);
+	error_check(semid, "CREATE SEMAPHORE");
+	//set the value of semaphore
+	union semun us;
+	us.val = val;
+	error_check(semctl(semid, 0, SETVAL, us), "CREATE SEMAPHORE");
+	return semid;
+}
+
+int get_semaphore(){
+	int semid = semget(KEY, 1, 0);
+	error_check(semid, "GET SEMAPHORE");
+	return semid;
+}
+
+void remove_semaphore(){
+	int semid = get_semaphore();
+	error_check(semctl(semid, -69, IPC_RMID), "REMOVE SEMAPHORE");
+}
+
+void gain_access(){
+	int semid = get_semaphore();
+	struct sembuf sem;
+	sem.sem_num = 0;
+	sem.sem_op = -1; //decrement
+	sem.sem_flg = IPC_NOWAIT;
+	int success = semop(semid, &sem, 1);
+	while(success == -1) success = semop(semid, &sem, 1);
+}
+
+void return_access(){
+	int semid = get_semaphore();
+	struct sembuf sem;
+	sem.sem_num = 0;
+	sem.sem_op = 1; //decrement
+	sem.sem_flg = IPC_NOWAIT;
+	error_check(semop(semid, &sem, 1), "RETURNING ACESS");
+}
 
 int file_exists(char* file_name){
 	int fd = open(file_name, O_RDONLY);
