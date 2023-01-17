@@ -82,7 +82,7 @@ char* file_content(char *file_name){
 	int fd = open(file_name, O_RDONLY);
 	error_check(fd, "FILE CONTENT Invalid File");
 	int size = file_size(file_name);
-	char* content = (char*)malloc(size);
+	char* content = (char*)calloc(size, 1);
 	error_check(read(fd, content, size), "FILE CONTENT Read");
 	close(fd);
 	return content;
@@ -113,7 +113,7 @@ void delete_file(char* file_name){
 }
 
 FILEITEM* get_item(struct dirent* entry){
-	FILEITEM* newItem = (FILEITEM*)malloc(sizeof(FILEITEM));
+	FILEITEM* newItem = (FILEITEM*)calloc(1, sizeof(FILEITEM));
 	//get the size
 	struct stat st;
 	error_check(stat(entry->d_name, &st), "GETTING ITEM'S stat");
@@ -135,7 +135,7 @@ FILEITEM* get_item(struct dirent* entry){
 }
 
 FILEITEM** get_items(char* path){
-	FILEITEM** items = (FILEITEM**)malloc(sizeof(FILEITEM*));
+	FILEITEM** items = (FILEITEM**)calloc(1, sizeof(FILEITEM*));
 	items[0] = NULL;
 	int cnt = 0;
 	//go through all the items in the dir path

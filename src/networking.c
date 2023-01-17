@@ -35,7 +35,7 @@ void cleanup(int sock){
 int create_socket(char* addr, char type){
 	//create the hints
 	struct addrinfo *hints, *res;
-	hints = (struct addrinfo*)calloc(1,sizeof(struct addrinfo));
+	hints = (struct addrinfo*)calloc(1, sizeof(struct addrinfo));
 	hints->ai_family = AF_INET; //IPv4
 	hints->ai_socktype = SOCK_STREAM; //TCP
 	if(type == 's') hints->ai_flags = AI_PASSIVE;
@@ -55,7 +55,7 @@ int create_socket(char* addr, char type){
 
 //send response to the client
 void send_response(int client, int status, int bytesNext, char* msg){
-	RESPONSE* res = (RESPONSE*)malloc(sizeof(RESPONSE));
+	RESPONSE* res = (RESPONSE*)calloc(1, sizeof(RESPONSE));
 	res->status = status;
 	res->bytesNext = bytesNext;
 	strncpy(res->message, msg, MESSAGE_SIZE);
@@ -65,14 +65,14 @@ void send_response(int client, int status, int bytesNext, char* msg){
 
 //receive response from the server (blocks)
 RESPONSE* receive_response(int server){
-	RESPONSE* res = (RESPONSE*)malloc(sizeof(RESPONSE));
+	RESPONSE* res = (RESPONSE*)calloc(1, sizeof(RESPONSE));
 	error_check(read(server, res, sizeof(RESPONSE)), "RECEIVING RESPONSE");
 	return res;
 }
 
 //send request to the server
 void send_request(int server, int type, int bytesNext){
-	REQUEST* req = (REQUEST*)malloc(sizeof(REQUEST));
+	REQUEST* req = (REQUEST*)calloc(1, sizeof(REQUEST));
 	req->type = type;
 	req->bytesNext = bytesNext;
 	error_check(write(server, req, sizeof(REQUEST)), "SENDING REQUEST");
@@ -81,14 +81,14 @@ void send_request(int server, int type, int bytesNext){
 
 //receive request from the client (blocks)
 REQUEST* receive_request(int client){
-	REQUEST* req = (REQUEST*)malloc(sizeof(REQUEST));
+	REQUEST* req = (REQUEST*)calloc(1, sizeof(REQUEST));
 	error_check(read(client, req, sizeof(REQUEST)), "RECEIVING REQUEST");
 	return req;
 }
 
 //gets follow up msg based on bytes
 char* get_next(int sock, int bytes){
-	char* str = (char*)malloc(bytes+1);
+	char* str = (char*)calloc(bytes+1, 1);
 	error_check(read(sock, str, bytes), "GETTING NEXT");
 	str[bytes] = 0;
 	return str;

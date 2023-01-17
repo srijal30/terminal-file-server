@@ -20,7 +20,7 @@ void error_check(int status, char* msg){
 }
 
 char* get_input(char* msg){
-	char* buf = (char*)malloc(MAXLINE);
+	char* buf = (char*)calloc(MAXLINE, 1);
 	printf("%s", msg);
 	fgets(buf, MAXLINE, stdin);
 	buf[strlen(buf)-1] = 0;

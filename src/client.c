@@ -33,6 +33,16 @@ int main(){
 	//setup
 	signal(SIGINT, handler);
 	server = client_connect();
+
+	items = client_query(server, ".");
+	for(int i = 0; items[i] != NULL; i++) printf("FILENAME: %s\n", items[i]->name);
+	free_items(items);
+	printf("\nTAKE TWO:\n");
+	items = client_query(server, ".");
+	for(int i = 0; items[i] != NULL; i++) printf("FILENAME: %s\n", items[i]->name);
+	free_items(items);
+	client_exit(server);
+
 	start_curses();
 
 	//gui loop
