@@ -1,14 +1,12 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 
-void client_exit(int server);
+int popup();
 
-void client_upload(int server);
+void start_curses();
 
-void client_query(int server);
+void close_curses();
 
-void client_delete(int server);
-
-void client_download(int server);
+static void handler(int sig);
 
 #endif

@@ -1,98 +1,239 @@
-#include <stdio.h>
 #include <stdlib.h>
-
 #include <string.h>
-#include <unistd.h>
-#include <sys/stat.h>
 
-#include "file.h"
+#include <unistd.h>
+#include <fcntl.h>
+#include <signal.h>
+
+#include <ncurses.h>
+
 #include "client.h"
 #include "helpers.h"
 #include "networking.h"
+#include "file.h"
+#include "utils.h"
+
+//GLOBALS
+int server;
+int height, width;
+enum MODE {GLOBAL, LOCAL};
+int mode = LOCAL;
+FILEITEM** items;
+int selected = 0;
+char cwd[256];
+
+//NCURSES
+WINDOW* leftMenu;
+WINDOW* rightMenu;
+WINDOW* topMenu;
+WINDOW* botMenu;
+WINDOW* inner;
 
 int main(){
-	//connect to server
-	char* ip = get_input("enter IP of server: ");
-	int server = connect_server(ip); free(ip);
-	
-	//the application
+	/*
+	items = get_items(".");
+	for(int i = 0; items[i] != NULL; i++) printf("FILENAME: %s\n", items[i]->name);
+	free_items(items);
+	printf("\nTAKE TWO:\n");
+	items = get_items(".");
+	for(int i = 0; items[i] != NULL; i++) printf("FILENAME: %s\n", items[i]->name);
+	free_items(items);
+	exit(0);
+	*/
+	//setup
+	signal(SIGINT, handler);
+	server = client_connect();
+	start_curses();
+
+	//gui loop
 	while(1){
-		//get user input
-		printf("\nCHOOSE ONE:\n\t0: EXIT\n\t1: UPLOAD\n\t2: DOWNLOAD\n\t3: DELETE\n\t4: QUERY\n");
-		char* input = get_input("choose one: ");
-		int type; sscanf(input, "%d", &type); free(input);
-		//determine case
-		switch(type){
-			case EXIT:
-				client_exit(server); break;
-			case UPLOAD:
-				client_upload(server); break;
-			case DOWNLOAD:
-				client_download(server); break;
-			case DELETE:
-				client_delete(server); break;
-			case QUERY:
-				client_query(server); break;
-			default:
-				printf("SOMETHING WENT WRONG!\n"); exit(1); break;
+		//update items
+		free_items(items);
+		if(mode == GLOBAL) items = client_query(server, ".");
+		else items = get_items(".");
+
+		//this depends on GLOBAL or LOCAL
+		getcwd(cwd, 256);
+
+		//update other vars
+		getmaxyx(stdscr, height, width);
+
+		//DRAW NEW GUI
+		erase();
+		//leftMenu
+		werase(leftMenu);
+		for(int i = 0; items[i] != NULL; i++){
+			if(selected == i) wattron(leftMenu, A_REVERSE);
+			mvwprintw(leftMenu, i+1, 1, "%s\n", items[i]->name);
+			if(selected == i) wattroff(leftMenu, A_REVERSE);
+			if(items[i]->type == 4) mvwprintw(leftMenu, i+1, 1+strlen(items[i]->name), "/");
+		}
+		box(leftMenu, 0, 0);
+
+		//rightMenu
+		werase(rightMenu);
+		werase(inner);
+		mvwprintw(inner, 0, 0, "%s", items[selected]->content);
+		box(rightMenu, 0, 0);
+
+
+		//topMenu
+		werase(topMenu);
+		char* msg = "FILEBOX++"; 
+		char* msg2 = "© Salaj Rijal";
+		mvwprintw(topMenu, 1, 1, msg);
+		mvwprintw(topMenu, 1, width-3-strlen(msg2), msg2);
+		//instructions
+		//local
+		if(mode == LOCAL) wattron(topMenu, A_REVERSE);
+		mvwprintw(topMenu, 3, 1, "(L) LOCAL");
+		if(mode == LOCAL) wattroff(topMenu, A_REVERSE);
+		//global
+		if(mode == GLOBAL) wattron(topMenu, A_REVERSE);
+		mvwprintw(topMenu, 3, 12, "(S) SERVER");
+		if(mode == GLOBAL) wattroff(topMenu, A_REVERSE);
+		mvwprintw(topMenu, 3, 24, "(ENTER) OPTIONS  (R) REFRESH  (Q) QUIT");
+		box(topMenu, 0, 0);
+		
+		//botMenu
+		werase(botMenu);
+		mvwprintw(botMenu, 0, 0, "LOCAL PATH: %s\n", cwd);
+
+		//display gui
+		refresh();
+		wrefresh(leftMenu);
+		wrefresh(rightMenu);
+		wrefresh(topMenu);
+		wrefresh(botMenu);
+		wrefresh(inner);
+
+		//handle input
+		int input = getch();
+		switch(input){
+			//cycle up
+			case KEY_UP: case 'k':
+				if(selected> 0) selected--;	
+			break;
+			//cycle down	
+			case KEY_DOWN: case 'j':
+				if(items[selected+1]!=NULL) selected++;
+			break;
+			//get options
+			case '\n':
+				//if dir
+				if(items[selected]->type == 4 && mode == LOCAL){
+					chdir(items[selected]->name);
+					selected = 0;
+				}
+				//if file
+				else if(items[selected]->type == 8){
+					int choice = popup();
+					switch(choice){
+						case DOWNLOAD: client_download(server, items[selected]->name);
+						break;
+						case UPLOAD: client_upload(server, items[selected]->name);
+						break;
+						case DELETE:
+							if(mode == GLOBAL) client_delete(server, items[selected]->name);
+							else delete_file(items[selected]->name);
+						break;
+					}
+				}
+			break;
+			//switch to server files
+			case 's': case 'S':
+				if(mode == LOCAL){
+					mode = GLOBAL;
+					selected = 0;
+				}
+			break;
+			//switch to client files
+			case 'l': case 'L':
+				if(mode == GLOBAL){
+					mode = LOCAL;
+					selected = 0;
+				}
+			break;
+			//refresh (idk if i need)
+			case 'r': case 'R':
+			break;
+			//quit
+			case 'q': case 'Q':
+				close_curses();
+			break;
 		}
 	}
-	//cleanup
-	cleanup(server);
-	return 0;
+
+	close_curses();
 }
 
-void client_exit(int server){
-	send_request(server, EXIT, -1);
-	cleanup(server);
-	printf("EXITING...\n");
-	exit(0);
+void start_curses(){
+	//setup ncurses
+	initscr();
+	noecho();
+	curs_set(0);
+	keypad(stdscr, 1);
+	//setup vars
+	getmaxyx(stdscr, height, width);
+	items = get_items(".");
+	//setup windows
+	leftMenu = newwin(height-8, (width-2)*2/5, 6, 1);
+	rightMenu = newwin(height-8, (width-2)*3/5, 6, (width-2)*2/5+2);
+	topMenu = newwin(5, width-2, 1, 1);
+	botMenu = newwin(1, width-2, height-2, 1);
+	inner = newwin(height-10, (width-2)*3/5-2, 7, (width-2)*2/5+3);
 }
 
-void client_upload(int server){
-	//get valid filename
-	char* file_name = get_input("file to upload: ");
-	while(!file_exists(file_name))
-		file_name = get_input("FILE DOES NOT EXIST!\nfile to upload: ");
-	//get the content
-	char* content = file_content(file_name);
-
-	//send message to server
-	//name of file
-	send_request(server, UPLOAD, strlen(file_name));
-	error_check(write(server, file_name, strlen(file_name)), "SENDING FILE");
-	//content of file
-	send_request(server, UPLOAD, file_size(file_name));
-	error_check(write(server, content, file_size(file_name)), "SENDING FILE");
-
-	//get the response
-	RESPONSE* res = receive_response(server);
-	printf("RESPONSE:\nSTATUS: %d\nBYTES_NEXT: %d\nMESSAGE: %s\n", res->status, res->bytesNext, res->message);
-	free(file_name);
-	free(content);
+void close_curses(){
+	endwin();
+	client_exit(server);
 }
 
-void client_download(int server){
-	//get name of file to download
-
-	//send name of file to download
-
-	//receive response
-
-	//receive file
-
+//return input of popup
+int popup(){
+	//setup popup
+	WINDOW* modal = newwin(8, 30, height/2-4, width/2-15);
+	//header
+	//this code makes me wanna cry ;(
+	char* msg = "CHOOSE OPTION";
+	//char* msg1 = "DOWNLOAD"; char* msg2 = "UPLOAD"; char* msg3 = "CANCEL";
+	char* menu[] = { mode == GLOBAL ? "DOWNLOAD" : "UPLOAD", "DELETE", "CANCEL"};
+	int cur = 0;
+	mvwprintw(modal, 1, (30-strlen(msg))/2, msg);
+	//options
+	for(int i = 0; i < 3; i++){
+		if(cur == i) wattron(modal, A_REVERSE);
+		mvwprintw(modal, 3+i, (30-strlen(menu[i]))/2, menu[i]);
+		if(cur == i) wattroff(modal, A_REVERSE);
+	}
+	box(modal, 0, 0);
+	wrefresh(modal);
+	int input = getch();
+	//this is really bad code that it makes me cry ;(
+	while(input != '\n'){
+		switch(input){
+			case 'j': case 'J': case KEY_DOWN:
+				if(cur < 2) cur++;
+			break;
+			case 'k': case 'K': case KEY_UP:
+				if(cur > 0) cur--;
+			break;
+		}
+		for(int i = 0; i < 3; i++){
+			if(cur == i) wattron(modal, A_REVERSE);
+			mvwprintw(modal, 3+i, (30-strlen(menu[i]))/2, menu[i]);
+			if(cur == i) wattroff(modal, A_REVERSE);
+		}
+		wrefresh(modal);
+		input = getch();
+	}
+	delwin(modal);
+	if(cur == 1) return DELETE; //DELETE
+	if(cur == 2) return -1;  //CANCEL
+	else if(cur == 0 && mode == GLOBAL) return DOWNLOAD; //DOWNLOAD
+	else return UPLOAD; //UPLOAD
 }
 
-void client_query(int server){
-	
+static void handler(int sig){
+	if(sig == SIGINT) close_curses();
 }
-
-void client_delete(int server){
-	//get name of file to delete
-	
-	//send to server
-
-	//get response
-	
-}
-

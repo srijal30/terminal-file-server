@@ -1,32 +1,28 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h> 
 
 #include <sys/socket.h>
-#include <sys/types.h>
 #include <netdb.h>
 
 #include "networking.h"
 #include "helpers.h"
 
-//returns the fd of client for subserver
 int init_server(){
-	//create socket and start listening
-	int sock = create_socket(NULL, 's');
+	int sock = create_socket("0.0.0.0", 's');
 	error_check(listen(sock, MAX_CLIENTS), "LISTEN SOCKET");
-
-	//keep on accepting clients
 	while(1==1){
-		int client_sock = accept(sock, NULL, NULL); //do we care about other params
+		//DO WE NEED TO KEEP TRACK OF CLIENTS??
+		int client_sock = accept(sock, NULL, NULL);
 		error_check(client_sock, "ACCEPT CLIENT");
-		//create subserver to deal with client
-		if(fork() == 0) return client_sock;
+		int forkVal = fork();
+		if(forkVal == 0) return client_sock;
+		else printf("\nSERVER %d CONNECTED TO CLIENT %d\n", forkVal, client_sock);
 	}
-
 	return -1;
 }
 
-//returns fd of the connected server
 int connect_server(char* ip){
 	return create_socket(ip, 'c');
 }
@@ -48,11 +44,9 @@ int create_socket(char* addr, char type){
 	//create the socket
 	int sock = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
 	error_check(sock, "CREATE SOCKET");
-
-	//connect or bind
+	//connect OR bind (depending on type)
 	if(type == 's') error_check(bind(sock, res->ai_addr, res->ai_addrlen), "BIND SERVER");
 	else if(type == 'c') error_check(connect(sock, res->ai_addr, res->ai_addrlen), "CONNECT CLIENT");
-
 	//cleanup
 	free(hints);
 	freeaddrinfo(res);
@@ -61,12 +55,10 @@ int create_socket(char* addr, char type){
 
 //send response to the client
 void send_response(int client, int status, int bytesNext, char* msg){
-	//create the response
 	RESPONSE* res = (RESPONSE*)malloc(sizeof(RESPONSE));
 	res->status = status;
 	res->bytesNext = bytesNext;
 	strncpy(res->message, msg, MESSAGE_SIZE);
-	//send it off
 	error_check(write(client, res, sizeof(RESPONSE)), "SENDING RESPONSE");
 	free(res);
 }
@@ -77,8 +69,6 @@ RESPONSE* receive_response(int server){
 	error_check(read(server, res, sizeof(RESPONSE)), "RECEIVING RESPONSE");
 	return res;
 }
-
-#include <stdio.h>
 
 //send request to the server
 void send_request(int server, int type, int bytesNext){
@@ -94,6 +84,14 @@ REQUEST* receive_request(int client){
 	REQUEST* req = (REQUEST*)malloc(sizeof(REQUEST));
 	error_check(read(client, req, sizeof(REQUEST)), "RECEIVING REQUEST");
 	return req;
+}
+
+//gets follow up msg based on bytes
+char* get_next(int sock, int bytes){
+	char* str = (char*)malloc(bytes+1);
+	error_check(read(sock, str, bytes), "GETTING NEXT");
+	str[bytes] = 0;
+	return str;
 }
 
 
