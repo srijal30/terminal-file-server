@@ -30,16 +30,6 @@ WINDOW* botMenu;
 WINDOW* inner;
 
 int main(){
-	/*
-	items = get_items(".");
-	for(int i = 0; items[i] != NULL; i++) printf("FILENAME: %s\n", items[i]->name);
-	free_items(items);
-	printf("\nTAKE TWO:\n");
-	items = get_items(".");
-	for(int i = 0; items[i] != NULL; i++) printf("FILENAME: %s\n", items[i]->name);
-	free_items(items);
-	exit(0);
-	*/
 	//setup
 	signal(SIGINT, handler);
 	server = client_connect();
@@ -47,11 +37,6 @@ int main(){
 
 	//gui loop
 	while(1){
-		//update items
-		free_items(items);
-		if(mode == GLOBAL) items = client_query(server, ".");
-		else items = get_items(".");
-
 		//this depends on GLOBAL or LOCAL
 		getcwd(cwd, 256);
 
@@ -60,6 +45,7 @@ int main(){
 
 		//DRAW NEW GUI
 		erase();
+
 		//leftMenu
 		werase(leftMenu);
 		for(int i = 0; items[i] != NULL; i++){
@@ -75,7 +61,6 @@ int main(){
 		werase(inner);
 		mvwprintw(inner, 0, 0, "%s", items[selected]->content);
 		box(rightMenu, 0, 0);
-
 
 		//topMenu
 		werase(topMenu);
@@ -124,6 +109,7 @@ int main(){
 				if(items[selected]->type == 4 && mode == LOCAL){
 					chdir(items[selected]->name);
 					selected = 0;
+					update_items();
 				}
 				//if file
 				else if(items[selected]->type == 8){
@@ -135,7 +121,7 @@ int main(){
 						break;
 						case DELETE:
 							if(mode == GLOBAL) client_delete(server, items[selected]->name);
-							else delete_file(items[selected]->name);
+							else if(mode == LOCAL) delete_file(items[selected]->name);
 						break;
 					}
 				}
@@ -145,6 +131,7 @@ int main(){
 				if(mode == LOCAL){
 					mode = GLOBAL;
 					selected = 0;
+					update_items();
 				}
 			break;
 			//switch to client files
@@ -152,10 +139,12 @@ int main(){
 				if(mode == GLOBAL){
 					mode = LOCAL;
 					selected = 0;
+					update_items();
 				}
 			break;
 			//refresh (idk if i need)
 			case 'r': case 'R':
+				update_items();
 			break;
 			//quit
 			case 'q': case 'Q':
@@ -236,4 +225,10 @@ int popup(){
 
 static void handler(int sig){
 	if(sig == SIGINT) close_curses();
+}
+
+void update_items(){
+	free_items(items);
+	if(mode == GLOBAL) items = client_query(server, ".");
+	else items = get_items(".");
 }

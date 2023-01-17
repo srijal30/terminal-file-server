@@ -9,4 +9,6 @@ void close_curses();
 
 static void handler(int sig);
 
+void update_items();
+
 #endif
