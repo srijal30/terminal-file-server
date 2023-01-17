@@ -120,9 +120,7 @@ FILEITEM* get_item(struct dirent* entry){
 	newItem->size = st.st_size;
 	//get the name & type
 	newItem->type = entry->d_type;
-	printf("\nCOPYING \"%s\" TO \"%s\"\n", entry->d_name, newItem->name);//DEBUG
 	strncpy(newItem->name, entry->d_name, 255);
-	printf("RESULT: %s\n", newItem->name);//DEBUG
 	(newItem->name)[255] = 0;
 	//get the content
 	//for file
@@ -130,7 +128,9 @@ FILEITEM* get_item(struct dirent* entry){
 	//for directory	
 	else if(newItem->type == 4) newItem->content = directory_content(entry->d_name);
 	//make the size the size of content
+	printf("BEFORE content=%d size=%d", strlen(newItem->content), newItem->size);
 	newItem->size = strlen(newItem->content);
+	printf("AFTER content=%d size=%d", strlen(newItem->content), newItem->size);
 	return newItem;
 }
 
