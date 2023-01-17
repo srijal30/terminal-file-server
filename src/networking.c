@@ -89,8 +89,9 @@ REQUEST* receive_request(int client){
 //gets follow up msg based on bytes
 char* get_next(int sock, int bytes){
 	char* str = (char*)calloc(bytes+1, 1);
-	error_check(read(sock, str, bytes), "GETTING NEXT");
-	str[bytes] = 0;
+	int bytesRead = read(sock, str, bytes);
+	error_check(bytesRead, "GETTING NEXT");
+	str[bytesRead] = 0;
 	return str;
 }
 

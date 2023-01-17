@@ -14,8 +14,6 @@
 #include "helpers.h"
 #include "file.h"
 
-
-//TAKEN FROM LAB 14 AND MODIFIED
 int KEY = 100792036;
 
 union semun {
@@ -80,10 +78,12 @@ int file_size(char* file_name){
 
 char* file_content(char *file_name){
 	int fd = open(file_name, O_RDONLY);
-	error_check(fd, "FILE CONTENT Invalid File");
+	error_check(fd, "FILE CONTENT open");
 	int size = file_size(file_name);
-	char* content = (char*)calloc(size, 1);
-	error_check(read(fd, content, size), "FILE CONTENT Read");
+	char* content = (char*)calloc(size+1, 1);
+	int bytesRead = read(fd, content, size);
+	error_check(bytesRead, "FILE CONTENT read");
+	content[bytesRead] = 0;
 	close(fd);
 	return content;
 }
@@ -91,11 +91,11 @@ char* file_content(char *file_name){
 char* directory_content(char* dir_name){
 	char* content = (char*)calloc(25600, 1); 
 	//run the command
-	char buf[256] = "ls ";
+	char buf[256] = "ls "; buf[255] = 0;
 	strcat(buf, dir_name);
 	FILE* ls = popen(buf, "r");
 	//create content
-	while(fgets(buf, 256, ls) != NULL){
+	while(fgets(buf, 255, ls) != NULL){
 		strcat(content, buf);
 	}
 	pclose(ls);
@@ -109,7 +109,7 @@ void create_file(char* file_name, char* file_content){
 }
 
 void delete_file(char* file_name){
-	error_check(remove(file_name), "REMOVE FILE");
+	if(file_exists(file_name)) error_check(remove(file_name), "REMOVE FILE");
 }
 
 FILEITEM* get_item(struct dirent* entry){
@@ -161,4 +161,3 @@ void free_items(FILEITEM** items){
 	while(items[cnt] != NULL);
 	free(items);
 }
-

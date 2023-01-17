@@ -48,7 +48,8 @@ FILEITEM** client_query(int server, char* path){
 	int cnt = res->bytesNext; free(res);
 	FILEITEM** items = (FILEITEM**)calloc((cnt+1), sizeof(FILEITEM*));
 	for(int i = 0; i < cnt; i++){
-		FILEITEM* newItem = (FILEITEM*)get_next(server, sizeof(FILEITEM));
+		FILEITEM* newItem = (FILEITEM*)calloc(1, sizeof(FILEITEM));
+		error_check(read(server, newItem, sizeof(FILEITEM)), "CLIENT QUERY reading item");
         //receive the content of newItem
         newItem->content = get_next(server, newItem->size);
 		items[i] = newItem;

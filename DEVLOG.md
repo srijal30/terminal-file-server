@@ -34,7 +34,7 @@
 
 ## 01/14
 - added function that creates list of all items in directory and well as some info
-- base GUI is semi complete
+- added windows for left and right menu
 - GUI loop created
 
 ## 01/15
@@ -48,3 +48,4 @@
 - integreated features wtih GUI
 - added semaphore for file writing access
 - are able to see content from GUI
+- fixed bugs where the client randomly crashed and the server accepted response infinitely
