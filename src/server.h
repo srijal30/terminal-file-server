@@ -13,6 +13,7 @@ void remove_file(int client, REQUEST* req);
 //send the client what files are in the server
 void query(int client, REQUEST* req);
 
+//handles interrupt
 static void handler(int sig);
 
 #endif

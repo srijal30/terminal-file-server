@@ -31,7 +31,6 @@ void cleanup(int sock){
 	error_check(close(sock), "CLOSING CONNECTION");
 }
 
-//creates a socket for server or client
 int create_socket(char* addr, char type){
 	//create the hints
 	struct addrinfo *hints, *res;
@@ -53,7 +52,6 @@ int create_socket(char* addr, char type){
 	return sock;
 }
 
-//send response to the client
 void send_response(int client, int status, int bytesNext, char* msg){
 	RESPONSE* res = (RESPONSE*)calloc(1, sizeof(RESPONSE));
 	res->status = status;
@@ -63,14 +61,12 @@ void send_response(int client, int status, int bytesNext, char* msg){
 	free(res);
 }
 
-//receive response from the server (blocks)
 RESPONSE* receive_response(int server){
 	RESPONSE* res = (RESPONSE*)calloc(1, sizeof(RESPONSE));
 	error_check(read(server, res, sizeof(RESPONSE)), "RECEIVING RESPONSE");
 	return res;
 }
 
-//send request to the server
 void send_request(int server, int type, int bytesNext){
 	REQUEST* req = (REQUEST*)calloc(1, sizeof(REQUEST));
 	req->type = type;
@@ -79,14 +75,12 @@ void send_request(int server, int type, int bytesNext){
 	free(req);
 }
 
-//receive request from the client (blocks)
 REQUEST* receive_request(int client){
 	REQUEST* req = (REQUEST*)calloc(1, sizeof(REQUEST));
 	error_check(read(client, req, sizeof(REQUEST)), "RECEIVING REQUEST");
 	return req;
 }
 
-//gets follow up msg based on bytes
 char* get_next(int sock, int bytes){
 	char* str = (char*)calloc(bytes+1, 1);
 	int bytesRead = read(sock, str, bytes);
