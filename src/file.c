@@ -125,11 +125,9 @@ FILEITEM* get_item(struct dirent* entry){
 	//for file
 	if(newItem->type == 8) newItem->content = file_content(entry->d_name);
 	//for directory	
-	else if(newItem->type == 4){
-		newItem->content = directory_content(entry->d_name);
-		//override size w/ directory content size
-		newItem->size = strlen(newItem->content);
-	};
+	else if(newItem->type == 4) newItem->content = directory_content(entry->d_name);
+	//make the size the size of content
+	newItem->size = strlen(newItem->content);
 	return newItem;
 }
 
