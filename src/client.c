@@ -34,6 +34,7 @@ int main(){
 	signal(SIGINT, handler);
 	server = client_connect();
 
+	/*
 	items = client_query(server, ".");
 	for(int i = 0; items[i] != NULL; i++) printf("\nFILENAME: %s\nCONTENT:\n%s\n", items[i]->name, items[i]->content);
 	free_items(items);
@@ -42,6 +43,7 @@ int main(){
 	for(int i = 0; items[i] != NULL; i++) printf("\nFILENAME: %s\nCONTENT:\n%s\n", items[i]->name, items[i]->content);
 	free_items(items);
 	client_exit(server);
+	*/
 
 	start_curses();
 

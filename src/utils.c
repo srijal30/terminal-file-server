@@ -46,7 +46,6 @@ FILEITEM** client_query(int server, char* path){
 	RESPONSE* res = receive_response(server);
 	//get all the file items (MAKE LAST ONE NULL MANUALLY)
 	int cnt = res->bytesNext; free(res);
-	printf("REACHED HERE\n"); //DEBUG
 	FILEITEM** items = (FILEITEM**)calloc((cnt+1), sizeof(FILEITEM*));
 	for(int i = 0; i < cnt; i++){
 		FILEITEM* newItem = (FILEITEM*)get_next(server, sizeof(FILEITEM));
