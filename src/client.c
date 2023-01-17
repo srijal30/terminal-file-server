@@ -29,6 +29,18 @@ WINDOW* topMenu;
 WINDOW* botMenu;
 
 int main(){
+	/*
+	items = get_items(".");
+	for(int i = 0; items[i] != NULL; i++) printf("FILENAME: %s\n", items[i]->name);
+	free_items(items);
+	
+	printf("\nTAKE TWO:\n");
+	items = get_items(".");
+	for(int i = 0; items[i] != NULL; i++) printf("FILENAME: %s\n", items[i]->name);
+	free_items(items);
+
+	exit(0);
+	*/
 	//setup
 	signal(SIGINT, handler);
 	server = client_connect();
@@ -60,8 +72,10 @@ int main(){
 		box(leftMenu, 0, 0);
 
 		//rightMenu
-		//werase(rightMenu);
+		werase(rightMenu);
+		mvwprintw(rightMenu, 1, 1, "%s", items[selected]->content);
 		box(rightMenu, 0, 0);
+
 
 		//topMenu
 		werase(topMenu);
@@ -158,8 +172,6 @@ void start_curses(){
 	noecho();
 	curs_set(0);
 	keypad(stdscr, 1);
-	//setup colors (doesnt work)
-	init_pair(1, COLOR_BLACK, COLOR_BLUE);
 	//setup vars
 	getmaxyx(stdscr, height, width);
 	items = get_items(".");

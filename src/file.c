@@ -88,7 +88,20 @@ char* file_content(char *file_name){
 	return content;
 }
 
-//should this replace??
+char* directory_content(char* dir_name){
+	char* content = (char*)calloc(25600, 1); 
+	//run the command
+	char buf[256] = "ls ";
+	strcat(buf, dir_name);
+	FILE* ls = popen(buf, "r");
+	//create content
+	while(fgets(buf, 256, ls) != NULL){
+		strcat(content, buf);
+	}
+	pclose(ls);
+	return content;
+}
+
 void create_file(char* file_name, char* file_content){
 	int fd = open(file_name, O_WRONLY | O_CREAT | O_TRUNC, 0666);
 	error_check(write(fd, file_content, strlen(file_content)), "CREATE FILE");
@@ -99,8 +112,6 @@ void delete_file(char* file_name){
 	error_check(remove(file_name), "REMOVE FILE");
 }
 
-//DOES NOT WORK FOR DIFFERENT DIRECTORIES (we can use chdir)
-//CREATE FILEITEM STRUCT
 FILEITEM* get_item(struct dirent* entry){
 	FILEITEM* newItem = (FILEITEM*)malloc(sizeof(FILEITEM));
 	//get the size
@@ -110,10 +121,18 @@ FILEITEM* get_item(struct dirent* entry){
 	//get the name & type
 	newItem->type = entry->d_type;
 	strncpy(newItem->name, entry->d_name, 256);
+	//get the content
+	//for file
+	if(newItem->type == 8) newItem->content = file_content(entry->d_name);
+	//for directory	
+	else if(newItem->type == 4){
+		newItem->content = directory_content(entry->d_name);
+		//override size w/ directory content size
+		newItem->size = strlen(newItem->content);
+	};
 	return newItem;
 }
 
-//GETS LIST OF FILE ITEMS IN PATH
 FILEITEM** get_items(char* path){
 	FILEITEM** items = (FILEITEM**)malloc(sizeof(FILEITEM*));
 	items[0] = NULL;
@@ -134,10 +153,12 @@ FILEITEM** get_items(char* path){
 	return items;
 }
 
-//FREES FILEITEM LIST
 void free_items(FILEITEM** items){
 	int cnt = 0;
-	do{free(items[cnt++]);}
+	do{
+		free(items[cnt]->content);
+		free(items[cnt++]);
+	}
 	while(items[cnt] != NULL);
 	free(items);
 }

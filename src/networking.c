@@ -23,12 +23,10 @@ int init_server(){
 	return -1;
 }
 
-//returns fd of the connected server
 int connect_server(char* ip){
 	return create_socket(ip, 'c');
 }
 
-//close the connection
 void cleanup(int sock){
 	error_check(close(sock), "CLOSING CONNECTION");
 }

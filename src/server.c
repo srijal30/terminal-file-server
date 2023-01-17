@@ -38,7 +38,6 @@ int main(){
 	return 0;
 }
 
-//GET ACCESS
 void accept_file(int client, REQUEST* req){
 	gain_access();
 	char* file_name = get_next(client, req->bytesNext);
@@ -65,7 +64,6 @@ void send_file(int client, REQUEST* req){
 	free(file_name);
 }
 
-//GET ACCESS
 void remove_file(int client, REQUEST* req){
 	gain_access();
 	char* file_name = get_next(client, req->bytesNext);
@@ -78,7 +76,6 @@ void remove_file(int client, REQUEST* req){
 	return_access();
 }
 
-//HOW TO SEND NULL?
 void query(int client, REQUEST* req){
 	char* path = get_next(client, req->bytesNext);
 	FILEITEM** items = get_items(path);	free(path);
@@ -87,7 +84,11 @@ void query(int client, REQUEST* req){
 	for( ; items[cnt] != NULL; cnt++){}
 	send_response(client, 1, cnt, "Queried the items!");
 	//send the items to client
-	for(int i = 0; i < cnt; i++) error_check(write(client, items[i], sizeof(FILEITEM)), "QUERY sending item");
+	for(int i = 0; i < cnt; i++){
+		error_check(write(client, items[i], sizeof(FILEITEM)), "QUERY sending item");
+		//send the content
+		error_check(write(client, items[i]->content, items[i]->size), "QUERY sending content");
+	}
 	free_items(items);
 }
 

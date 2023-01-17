@@ -5,6 +5,7 @@ typedef struct fileitem {
 	char name[256];
 	int size;
 	int type;
+	char* content;
 	//char* content; //stores the content of item
 } FILEITEM;
 
@@ -32,5 +33,7 @@ char* file_content(char *file_name);
 void create_file(char* file_name, char* file_content);
 
 void delete_file(char* file_name);
+
+char* directory_content(char* dir_name);
 
 #endif

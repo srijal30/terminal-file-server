@@ -3,7 +3,7 @@
 
 #define MESSAGE_SIZE 50
 #define PORT "58008"
-#define MAX_CLIENTS 10
+#define MAX_CLIENTS 40
 
 enum TYPE{
 	EXIT,

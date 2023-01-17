@@ -26,7 +26,6 @@ void client_upload(int server, char* filename){
         free(content); free(res);
 }
 
-//NEED TO ADD DESTINATION PATH
 void client_download(int server, char* filename){
         //send name of file to download
         send_request(server, DOWNLOAD, strlen(filename));
@@ -34,8 +33,8 @@ void client_download(int server, char* filename){
         //receive response
         RESPONSE* res = receive_response(server);
         //receive file
-		char* content = get_next(server, res->bytesNext); free(res);
-		create_file(filename, content); free(content);
+	char* content = get_next(server, res->bytesNext); free(res);
+	create_file(filename, content); free(content);
 }
 
 FILEITEM** client_query(int server, char* path){
@@ -49,6 +48,8 @@ FILEITEM** client_query(int server, char* path){
 	FILEITEM** items = (FILEITEM**)malloc(sizeof(FILEITEM*)*(cnt+1));
 	for(int i = 0; i < cnt; i++){
 		FILEITEM* newItem = (FILEITEM*)get_next(server, sizeof(FILEITEM));
+                //receive the content of newItem
+                newItem->content = get_next(server, newItem->size);
 		items[i] = newItem;
 	}
 	items[cnt] = NULL;
