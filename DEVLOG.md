@@ -47,3 +47,4 @@
 - added bottomMenu window
 - integreated features wtih GUI
 - added semaphore for file writing access
+- are able to see content from GUI

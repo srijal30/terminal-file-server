@@ -27,18 +27,17 @@ WINDOW* leftMenu;
 WINDOW* rightMenu;
 WINDOW* topMenu;
 WINDOW* botMenu;
+WINDOW* inner;
 
 int main(){
 	/*
 	items = get_items(".");
 	for(int i = 0; items[i] != NULL; i++) printf("FILENAME: %s\n", items[i]->name);
 	free_items(items);
-	
 	printf("\nTAKE TWO:\n");
 	items = get_items(".");
 	for(int i = 0; items[i] != NULL; i++) printf("FILENAME: %s\n", items[i]->name);
 	free_items(items);
-
 	exit(0);
 	*/
 	//setup
@@ -73,7 +72,8 @@ int main(){
 
 		//rightMenu
 		werase(rightMenu);
-		mvwprintw(rightMenu, 1, 1, "%s", items[selected]->content);
+		werase(inner);
+		mvwprintw(inner, 0, 0, "%s", items[selected]->content);
 		box(rightMenu, 0, 0);
 
 
@@ -105,6 +105,7 @@ int main(){
 		wrefresh(rightMenu);
 		wrefresh(topMenu);
 		wrefresh(botMenu);
+		wrefresh(inner);
 
 		//handle input
 		int input = getch();
@@ -117,7 +118,7 @@ int main(){
 			case KEY_DOWN: case 'j':
 				if(items[selected+1]!=NULL) selected++;
 			break;
-			//get options (this one finna be hard)
+			//get options
 			case '\n':
 				//if dir
 				if(items[selected]->type == 4 && mode == LOCAL){
@@ -180,6 +181,7 @@ void start_curses(){
 	rightMenu = newwin(height-8, (width-2)*3/5, 6, (width-2)*2/5+2);
 	topMenu = newwin(5, width-2, 1, 1);
 	botMenu = newwin(1, width-2, height-2, 1);
+	inner = newwin(height-10, (width-2)*3/5-2, 7, (width-2)*2/5+3);
 }
 
 void close_curses(){
