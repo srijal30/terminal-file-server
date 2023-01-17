@@ -81,7 +81,7 @@ void query(int client, REQUEST* req){
 	FILEITEM** items = get_items(path);	free(path);
 	//get amount of items (excluding NULL)
 	int cnt = 0;
-	for( ; items[cnt] != NULL; cnt++){}
+	for(int i = 0; items[i] != NULL; i++){cnt++;}
 	send_response(client, 1, cnt, "Queried the items!");
 	//send the items to client
 	for(int i = 0; i < cnt; i++){
