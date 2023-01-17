@@ -120,7 +120,8 @@ FILEITEM* get_item(struct dirent* entry){
 	newItem->size = st.st_size;
 	//get the name & type
 	newItem->type = entry->d_type;
-	strncpy(newItem->name, entry->d_name, 256);
+	strncpy(newItem->name, entry->d_name, 255);
+	(newItem->name)[255] = 0;
 	//get the content
 	//for file
 	if(newItem->type == 8) newItem->content = file_content(entry->d_name);
