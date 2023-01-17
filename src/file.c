@@ -128,9 +128,9 @@ FILEITEM* get_item(struct dirent* entry){
 	//for directory	
 	else if(newItem->type == 4) newItem->content = directory_content(entry->d_name);
 	//make the size the size of content
-	printf("BEFORE content=%d size=%d", strlen(newItem->content), newItem->size);
+	printf("\nNAME: %s\nBEFORE content=%d size=%d\n", newItem->name, strlen(newItem->content), newItem->size);
 	newItem->size = strlen(newItem->content);
-	printf("AFTER content=%d size=%d", strlen(newItem->content), newItem->size);
+	printf("AFTER content=%d size=%d\n", strlen(newItem->content), newItem->size);
 	return newItem;
 }
 

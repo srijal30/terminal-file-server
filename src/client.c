@@ -35,11 +35,11 @@ int main(){
 	server = client_connect();
 
 	items = client_query(server, ".");
-	for(int i = 0; items[i] != NULL; i++) printf("FILENAME: %s\n", items[i]->name);
+	for(int i = 0; items[i] != NULL; i++) printf("\nFILENAME: %s\nCONTENT:\n%s\n", items[i]->name, items[i]->content);
 	free_items(items);
 	printf("\nTAKE TWO:\n");
 	items = client_query(server, ".");
-	for(int i = 0; items[i] != NULL; i++) printf("FILENAME: %s\n", items[i]->name);
+	for(int i = 0; items[i] != NULL; i++) printf("\nFILENAME: %s\nCONTENT:\n%s\n", items[i]->name, items[i]->content);
 	free_items(items);
 	client_exit(server);
 
