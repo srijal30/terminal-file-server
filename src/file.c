@@ -120,6 +120,7 @@ FILEITEM* get_item(struct dirent* entry){
 	newItem->size = st.st_size;
 	//get the name & type
 	newItem->type = entry->d_type;
+	printf("\nCOPYING \"%s\" TO \"%s\"\n", entry->d_name, newItem->name);//DEBUG
 	strncpy(newItem->name, entry->d_name, 255);
 	(newItem->name)[255] = 0;
 	//get the content
