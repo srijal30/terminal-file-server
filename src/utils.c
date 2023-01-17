@@ -48,8 +48,8 @@ FILEITEM** client_query(int server, char* path){
 	FILEITEM** items = (FILEITEM**)malloc(sizeof(FILEITEM*)*(cnt+1));
 	for(int i = 0; i < cnt; i++){
 		FILEITEM* newItem = (FILEITEM*)get_next(server, sizeof(FILEITEM));
-                //receive the content of newItem
-                newItem->content = get_next(server, newItem->size);
+        //receive the content of newItem
+        newItem->content = get_next(server, newItem->size);
 		items[i] = newItem;
 	}
 	items[cnt] = NULL;
