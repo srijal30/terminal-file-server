@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include <unistd.h>
 
 #include <signal.h>
@@ -15,6 +16,7 @@ int main(){
 	int client = init_server();
 	while(1==1){
 		REQUEST* req = receive_request(client);
+		printf("REQUEST TYPE: %d\n", req->type);
 		switch(req->type){
 			case EXIT:
 				cleanup(client);
@@ -33,6 +35,7 @@ int main(){
 				break;
 		}
 		free(req);
+		printf("DONE WITH REQUEST\n\n");
 	}
 	cleanup(client);
 	return 0;
