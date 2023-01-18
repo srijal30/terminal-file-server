@@ -20,7 +20,7 @@ Since this project requires `ncurses`, make sure you have it installed. You can 
 sudo apt-get install libncurses5-dev libncursesw5-dev
 ```
 
-To compile the server and client, run this command:
+To compile the server and client, run this command (at the root of repo):
 ```
 make compile
 ```
