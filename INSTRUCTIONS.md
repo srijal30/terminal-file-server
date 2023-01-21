@@ -22,6 +22,12 @@ To run the client, simply execute this command:
 make client
 ```
 
+# Features
+* Browse files and their content from both the local and remote directories
+* Upload local files to the remote server
+* Download remote files to your local drive
+* Delete remove and local files
+
 # Known Bugs
 
 **Bug 0: Random Segfault**<br>
