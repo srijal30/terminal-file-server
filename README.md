@@ -1,4 +1,5 @@
-# SatoshiNakamoto 🥷
+# Terminal File Server
+**NOTE:** This project was built as a final project for systems level programming course that I took in high school back in 2023. It has been reuploaded to github to display for my portfolio.
 
 # Members
 * Salaj Rijal
